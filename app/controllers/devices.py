@@ -34,6 +34,39 @@ control_service = ControlService()
 device_service = DeviceService()
 
 
+@devices_bp.get("")
+@devices_bp.get("/")
+def list_telemetry():
+    """Proxy opcional de GET /api hacia el backend remoto.
+
+    El dashboard usa esta ruta para mostrar lecturas sin consultar directo al EC2.
+    Si el backend remoto responde con error, devolvemos el error tal cual.
+    """
+
+    params: Dict[str, Any] = {}
+    if "limit" in request.args:
+        params["limit"] = request.args["limit"]
+    if "device" in request.args:
+        params["device"] = request.args["device"]
+
+    try:
+        resp = requests.get(
+            f"{REMOTE_API_ROOT}/api",
+            params=params,
+            headers=_auth_headers(),
+            timeout=5,
+        )
+    except requests.RequestException as exc:  # pragma: no cover - red
+        return jsonify({"error": "remote_unreachable", "detail": str(exc)}), 502
+
+    try:
+        data = resp.json()
+    except ValueError:  # pragma: no cover - formato inesperado
+        data = {"error": "invalid_json"}
+
+    return jsonify(data), resp.status_code
+
+
 @devices_bp.post("")
 @devices_bp.post("/")
 def ingest_telemetry():

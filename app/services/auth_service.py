@@ -10,7 +10,7 @@ class AuthService:
     def register_user(self, email: str, name: str, password: str):
         existing = self.user_repo.get_by_email(email)
         if existing:
-            return existing
+            raise ValueError("email_exists")
         password_hash = generate_password_hash(password)
         return self.user_repo.create_user(email=email, name=name, password_hash=password_hash)
 

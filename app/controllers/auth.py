@@ -23,7 +23,7 @@ def login_submit():
     session["user_id"] = user.id
     session["user_name"] = user.name
     flash("Bienvenido/a", "success")
-    return redirect(url_for("pages.dashboard"))
+    return redirect(url_for("pages.dashboard_list"))
 
 
 @auth_bp.get("/register")
@@ -40,11 +40,29 @@ def register_submit():
         flash("Completa todos los campos", "error")
         return redirect(url_for("auth.register_form"))
 
-    user = auth_service.register_user(email=email, name=name, password=password)
+    try:
+        user = auth_service.register_user(email=email, name=name, password=password)
+    except ValueError:
+        flash("El correo ya esta registrado", "error")
+        return redirect(url_for("auth.register_form"))
+
     session["user_id"] = user.id
     session["user_name"] = user.name
     flash("Cuenta creada", "success")
-    return redirect(url_for("pages.dashboard"))
+    return redirect(url_for("pages.dashboard_list"))
+
+
+@auth_bp.get("/forgot-password")
+def forgot_password_form():
+    return render_template("auth/forgot_password.html")
+
+
+@auth_bp.post("/forgot-password")
+def forgot_password_submit():
+    email = request.form.get("email", "").strip().lower()
+    # For demo purposes, we don't send emails; just flash a message
+    flash("Si el correo existe en el sistema, se enviaron instrucciones.", "info")
+    return redirect(url_for("auth.login_form"))
 
 
 @auth_bp.post("/logout")

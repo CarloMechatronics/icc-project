@@ -3,17 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ title or "HomeHub" }}</title>
+  <title>{% block title %}{{ title or "HomeHub" }}{% endblock %}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
 <body>
+  {% set logged_in = session.get("user_id") %}
   <header class="topbar">
-    <div class="brand">HomeHub</div>
-    <nav class="nav">
-      <a href="/">Dashboard</a>
-      <a href="/homes">Hogares</a>
-      <a href="/auth/login">Login</a>
+    <div class="brand">
+      <a href="{{ url_for('pages.dashboard_list') }}">HomeHub</a>
+      <span class="brand-tag">IoT</span>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false">Menu</button>
+    <nav class="nav" id="main-nav">
+      <a href="{{ url_for('pages.dashboard_list') }}">Dashboard</a>
+      <a href="{{ url_for('homes.homes_page') }}">Hogares</a>
+      {% if logged_in %}
+        <span class="nav-user">Hola, {{ session.get("user_name", "usuario") }}</span>
+        <form method="post" action="{{ url_for('auth.logout') }}" class="nav-logout">
+          <button type="submit" class="link-button">Cerrar sesion</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('auth.login_form') }}">Login</a>
+        <a href="{{ url_for('auth.register_form') }}">Registro</a>
+      {% endif %}
     </nav>
   </header>
   <main class="container">
@@ -31,6 +44,14 @@
   <script>
     // Si API_BASE_URL esta definido en la config, se usa para llamar al backend
     window.APP_API_BASE = "{{ config.API_BASE_URL }}";
+    const navToggle = document.getElementById("nav-toggle");
+    const mainNav = document.getElementById("main-nav");
+    if (navToggle && mainNav) {
+      navToggle.addEventListener("click", () => {
+        const isOpen = mainNav.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    }
   </script>
   <script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
 </body>

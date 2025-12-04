@@ -1,14 +1,23 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
+{% block title %}SmartHome - Login{% endblock %}
 {% block content %}
-<div class="card auth-card">
-  <h2>Login</h2>
+<section class="card auth-card">
+  <h2>Iniciar sesion</h2>
+  <p class="muted">Accede al panel para ver tus hogares y dispositivos.</p>
   <form method="post" action="{{ url_for('auth.login_submit') }}">
-    <label>Email</label>
-    <input type="email" name="email" required />
-    <label>Password</label>
-    <input type="password" name="password" required />
-    <button type="submit">Ingresar</button>
+    <div class="form-field">
+      <label>Correo electronico</label>
+      <input name="email" type="email" autocomplete="email" required>
+    </div>
+    <div class="form-field">
+      <label>Contrasena</label>
+      <input name="password" type="password" autocomplete="current-password" required>
+      <div>
+        <a href="{{ url_for('auth.forgot_password_form') }}">Olvidaste tu contrasena?</a>
+      </div>
+    </div>
+    <button class="btn" style="width:100%">Entrar</button>
+    <p class="muted" style="margin-top:10px;">No tienes cuenta? <a href="{{ url_for('auth.register_form') }}">Registrate</a></p>
   </form>
-  <p class="muted">No tienes cuenta? <a href="{{ url_for('auth.register_form') }}">Registrate</a></p>
-</div>
+</section>
 {% endblock %}

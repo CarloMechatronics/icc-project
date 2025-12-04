@@ -9,7 +9,10 @@ home_service = HomeService()
 @homes_bp.get("")
 def homes_page():
     homes = home_service.list_homes()
-    return render_template("homes.html", homes=homes)
+    if not homes:
+        demo = home_service.ensure_default()
+        homes = [demo]
+    return render_template("dashboard_list.html", homes=homes)
 
 
 @homes_bp.get("/api")

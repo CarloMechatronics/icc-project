@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Hogares{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Hogares</p>
+    <h1>Tus espacios conectados</h1>
+    <p class="muted">Selecciona un hogar para entrar al tablero y ver dispositivos.</p>
+  </div>
+</section>
+
+<section>
+  <div class="homes-grid">
+    {% for home in homes %}
+    <a class="home-card" href="{{ url_for('pages.home_dashboard', home_id=home.id) }}">
+      <div class="card">
+        <h3>{{ home.name }}</h3>
+        <p class="muted">{{ home.timezone }}{% if home.address %} - {{ home.address }}{% endif %}</p>
+        <p class="muted">{{ home.description or 'Casa configurada con ESP32' }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

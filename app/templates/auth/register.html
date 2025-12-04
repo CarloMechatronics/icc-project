@@ -1,16 +1,23 @@
 ﻿{% extends "base.html" %}
 {% block content %}
-<div class="card auth-card">
-  <h2>Registro</h2>
+<section class="card auth-card">
+  <h2>Crear cuenta</h2>
+  <p class="muted">Registra tu usuario para administrar hogares y dispositivos.</p>
   <form method="post" action="{{ url_for('auth.register_submit') }}">
-    <label>Nombre</label>
-    <input type="text" name="name" required />
-    <label>Email</label>
-    <input type="email" name="email" required />
-    <label>Password</label>
-    <input type="password" name="password" required />
-    <button type="submit">Crear cuenta</button>
+    <div class="form-field">
+      <label>Nombre</label>
+      <input type="text" name="name" required />
+    </div>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" name="email" required />
+    </div>
+    <div class="form-field">
+      <label>Contrasena</label>
+      <input type="password" name="password" required />
+    </div>
+    <button type="submit" class="btn" style="width:100%;">Crear cuenta</button>
   </form>
-  <p class="muted">Ya tienes cuenta? <a href="{{ url_for('auth.login_form') }}">Ingresa</a></p>
-</div>
+  <p class="muted" style="margin-top:10px;">Ya tienes cuenta? <a href="{{ url_for('auth.login_form') }}">Ingresa</a></p>
+</section>
 {% endblock %}

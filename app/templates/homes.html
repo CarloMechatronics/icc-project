@@ -1,15 +1,28 @@
 ﻿{% extends "base.html" %}
 {% block content %}
-<section class="card">
-  <h2>Hogares</h2>
+<section class="hero">
+  <div>
+    <p class="eyebrow">Listado</p>
+    <h1>Hogares configurados</h1>
+    <p class="muted">Vista rapida de todos los hogares registrados.</p>
+  </div>
+</section>
+
+<section>
   {% if homes %}
-    <ul>
-    {% for home in homes %}
-      <li>{{ home.name }} ({{ home.timezone }})</li>
-    {% endfor %}
-    </ul>
+    <div class="homes-grid">
+      {% for home in homes %}
+        <div class="card">
+          <h3>{{ home.name }}</h3>
+          <p class="muted">{{ home.timezone }}{% if home.address %} - {{ home.address }}{% endif %}</p>
+          <p class="muted">{{ home.description or 'Casa configurada con ESP32' }}</p>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
-    <p class="muted">No hay hogares registrados.</p>
+    <div class="card">
+      <p class="muted">No hay hogares registrados.</p>
+    </div>
   {% endif %}
 </section>
 {% endblock %}

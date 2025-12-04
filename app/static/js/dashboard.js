@@ -3,8 +3,15 @@
 // El dashboard habla siempre con el mismo origen (localhost/EC2) en rutas /api/*.
 // El backend Flask local se encarga de proxyar estas rutas al EC2 real.
 
+function withBase(path) {
+  const base = window.APP_API_BASE || "";
+  if (!base) return path;
+  // Evitar dobles slashes si el path ya empieza con /
+  return `${base.replace(/\/$/, "")}${path}`;
+}
+
 async function fetchJSON(path, options = {}) {
-  const res = await fetch(path, options);
+  const res = await fetch(withBase(path), options);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
