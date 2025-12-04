@@ -1,0 +1,15 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Hogares</h2>
+  {% if homes %}
+    <ul>
+    {% for home in homes %}
+      <li>{{ home.name }} ({{ home.timezone }})</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No hay hogares registrados.</p>
+  {% endif %}
+</section>
+{% endblock %}
