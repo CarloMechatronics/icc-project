@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
 
 # Global SQLAlchemy and Migrate instances
 # Initialized in create_app
@@ -33,6 +34,28 @@ def create_app(config_name: str | None = None) -> Flask:
     from app.controllers import register_blueprints
 
     register_blueprints(app)
+
+    def _seed_admin():
+        """Crea/actualiza un admin por defecto si no existe."""
+        try:
+            from app.repositories import UserRepository
+            from app.models import GlobalRole
+
+            email = os.getenv("SEED_ADMIN_EMAIL", "carlo.torres@utec.edu.pe").lower()
+            name = os.getenv("SEED_ADMIN_NAME", "Carlo Torres")
+            password = os.getenv("SEED_ADMIN_PASSWORD", "carlo123")
+
+            repo = UserRepository()
+            user = repo.get_by_email(email)
+            if not user:
+                user = repo.create_user(email=email, name=name, password_hash=generate_password_hash(password))
+            if user.global_role != GlobalRole.SYSTEM_ADMIN:
+                repo.update_user(user, role=GlobalRole.SYSTEM_ADMIN)
+        except Exception as exc:  # pragma: no cover - best effort
+            app.logger.warning("Seed admin skipped: %s", exc)
+
+    with app.app_context():
+        _seed_admin()
 
     # Shell context for flask shell
     @app.shell_context_processor

@@ -14,21 +14,12 @@ def root():
 
 @pages_bp.route("/dashboard")
 def dashboard_list():
-    # Require login via session
-    if not session.get("user_id"):
-        return redirect(url_for("auth.login_form"))
-
-    homes = home_service.list_homes()
-    if not homes:
-        # ensure at least a demo home exists
-        demo = home_service.ensure_default()
-        homes = [demo]
-    return render_template("dashboard_list.html", homes=homes)
+    # Redirigimos al listado de hogares unificado
+    return redirect(url_for("homes.homes_page"))
 
 
-@pages_bp.route("/home/<int:home_id>/dashboard")
-@pages_bp.route("/dashboard/<int:home_id>")  # compat
-def home_dashboard(home_id: int):
+@pages_bp.route("/dashboard/<int:home_id>")
+def dashboard(home_id: int):
     if not session.get("user_id"):
         return redirect(url_for("auth.login_form"))
 
@@ -36,3 +27,9 @@ def home_dashboard(home_id: int):
     if not home:
         return redirect(url_for("pages.dashboard_list"))
     return render_template("dashboard.html", home=home)
+
+
+@pages_bp.route("/home/<int:home_id>/dashboard")
+def legacy_home_dashboard(home_id: int):
+    # compatibilidad: redirige al nuevo path
+    return redirect(url_for("pages.dashboard", home_id=home_id))

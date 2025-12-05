@@ -22,8 +22,9 @@ def login_submit():
 
     session["user_id"] = user.id
     session["user_name"] = user.name
+    session["user_role"] = user.global_role.value if hasattr(user, "global_role") else None
     flash("Bienvenido/a", "success")
-    return redirect(url_for("pages.dashboard_list"))
+    return redirect(url_for("homes.homes_page"))
 
 
 @auth_bp.get("/register")
@@ -48,8 +49,9 @@ def register_submit():
 
     session["user_id"] = user.id
     session["user_name"] = user.name
+    session["user_role"] = user.global_role.value if hasattr(user, "global_role") else None
     flash("Cuenta creada", "success")
-    return redirect(url_for("pages.dashboard_list"))
+    return redirect(url_for("homes.homes_page"))
 
 
 @auth_bp.get("/forgot-password")

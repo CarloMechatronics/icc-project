@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}{{ title or "HomeHub" }}{% endblock %}</title>
+  <title>{% block title %}{{ title or "SmartHome" }}{% endblock %}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 </head>
@@ -11,13 +11,15 @@
   {% set logged_in = session.get("user_id") %}
   <header class="topbar">
     <div class="brand">
-      <a href="{{ url_for('pages.dashboard_list') }}">HomeHub</a>
+      <a href="{{ url_for('homes.homes_page') }}">SmartHome</a>
       <span class="brand-tag">IoT</span>
     </div>
     <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false">Menu</button>
     <nav class="nav" id="main-nav">
-      <a href="{{ url_for('pages.dashboard_list') }}">Dashboard</a>
       <a href="{{ url_for('homes.homes_page') }}">Hogares</a>
+      {% if logged_in and session.get("user_role") == "SYSTEM_ADMIN" %}
+        <a href="{{ url_for('users.users_page') }}">Usuarios</a>
+      {% endif %}
       {% if logged_in %}
         <span class="nav-user">Hola, {{ session.get("user_name", "usuario") }}</span>
         <form method="post" action="{{ url_for('auth.logout') }}" class="nav-logout">

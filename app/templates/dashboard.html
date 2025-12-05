@@ -1,74 +1,62 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block content %}
-<section class="hero">
-  <div>
-    <p class="eyebrow">Smart Home</p>
-    <h1>Panel IoT</h1>
-    <p>Lecturas en vivo del ESP32-S3 y controles remotos.</p>
-  </div>
-  <div class="badge">MySQL + Flask + ESP32-S3</div>
-</section>
-
-<section class="grid">
-  <div class="card">
-    <h3>Temperatura</h3>
-    <p class="value" id="temp-value">-- C</p>
-    <p class="muted" id="temp-updated">Esperando datos...</p>
-  </div>
-  <div class="card">
-    <h3>Humedad</h3>
-    <p class="value" id="hum-value">-- %</p>
-    <p class="muted" id="hum-updated">Esperando datos...</p>
-  </div>
-  <div class="card">
-    <h3>Movimiento</h3>
-    <p class="value" id="motion-value">--</p>
-    <p class="muted" id="motion-updated">Esperando datos...</p>
-  </div>
-</section>
-
-<section class="card control-card">
-  <div class="control-row">
+<div id="dashboard-root" data-home-id="{{ home.id }}">
+  <section class="hero">
     <div>
-      <p class="label">LED 1 (GPIO2)</p>
-      <label class="switch">
-        <input type="checkbox" id="led1-toggle" />
-        <span class="slider"></span>
-      </label>
+      <p class="eyebrow">Smart Home</p>
+      <h1>Panel IoT</h1>
+      <p>Lecturas en vivo del ESP32-S3 y controles remotos.</p>
     </div>
-    <div>
-      <p class="label">LED 2 (GPIO42)</p>
-      <label class="switch">
-        <input type="checkbox" id="led2-toggle" />
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div>
-      <p class="label">Puerta</p>
-      <label class="switch">
-        <input type="checkbox" id="door-toggle" />
-        <span class="slider"></span>
-      </label>
-      <input type="range" id="door-angle" min="0" max="180" value="0" />
-    </div>
-  </div>
-  <div class="control-actions">
-    <button id="apply-control" class="btn">Aplicar</button>
-    <span class="muted" id="control-status">Pendiente</span>
-  </div>
-</section>
+    <div class="badge">MySQL + Flask + ESP32-S3</div>
+  </section>
 
-<section class="card">
-  <h3>Metricas</h3>
-  <pre id="metrics-json" class="pre"></pre>
-</section>
+  <section class="grid">
+    <div class="card">
+      <h3>Temperatura</h3>
+      <p class="value" id="temp-value">-- C</p>
+      <p class="muted" id="temp-updated">Esperando datos...</p>
+    </div>
+    <div class="card">
+      <h3>Humedad</h3>
+      <p class="value" id="hum-value">-- %</p>
+      <p class="muted" id="hum-updated">Esperando datos...</p>
+    </div>
+    <div class="card">
+      <h3>Movimiento</h3>
+      <p class="value" id="motion-value">--</p>
+      <p class="muted" id="motion-updated">Esperando datos...</p>
+    </div>
+  </section>
 
-<section class="card">
-  <h3>Chatbot FAQ</h3>
-  <form id="faq-form">
-    <input type="text" id="faq-input" placeholder="Pregunta sobre el sistema" />
-    <button type="submit" class="btn secondary">Preguntar</button>
-  </form>
-  <div id="faq-answer" class="muted"></div>
-</section>
+  <section class="card control-card">
+    <div class="control-row">
+      <div>
+        <p class="label">LED 1 (GPIO2)</p>
+        <label class="switch">
+          <input type="checkbox" id="led1-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div>
+        <p class="label">LED 2 (GPIO42)</p>
+        <label class="switch">
+          <input type="checkbox" id="led2-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div>
+        <p class="label">Puerta</p>
+        <label class="switch">
+          <input type="checkbox" id="door-toggle" />
+          <span class="slider"></span>
+        </label>
+        <input type="range" id="door-angle" min="0" max="180" value="0" />
+      </div>
+    </div>
+    <div class="control-actions">
+      <button id="apply-control" class="btn">Aplicar</button>
+      <span class="muted" id="control-status">Pendiente</span>
+    </div>
+  </section>
+</div>
 {% endblock %}

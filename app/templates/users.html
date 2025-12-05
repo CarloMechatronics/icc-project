@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}SmartHome - Usuarios{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Administracion</p>
+    <h1>Usuarios</h1>
+    <p class="muted">Crear, editar o eliminar usuarios (solo administradores).</p>
+  </div>
+</section>
+
+<section class="card auth-card" style="max-width: 640px;">
+  <h3>Crear usuario</h3>
+  <form method="post" action="{{ url_for('users.create_user') }}">
+    <div class="form-field">
+      <label>Nombre</label>
+      <input type="text" name="name" required />
+    </div>
+    <div class="form-field">
+      <label>Email</label>
+      <input type="email" name="email" required />
+    </div>
+    <div class="form-field">
+      <label>Contrasena</label>
+      <input type="password" name="password" required />
+    </div>
+    <div class="form-field">
+      <label>Rol</label>
+      <select name="role">
+        {% for role in GlobalRole %}
+          <option value="{{ role.value }}">{{ role.value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn" style="width:100%;">Crear</button>
+  </form>
+</section>
+
+<section style="margin-top: 18px;">
+  <div class="homes-grid">
+    {% for user in users %}
+    <div class="card" style="gap: 10px;">
+      <h3>{{ user.name }}</h3>
+      <p class="muted">{{ user.email }}</p>
+
+      <form method="post" action="{{ url_for('users.update_user', user_id=user.id) }}" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="form-field">
+          <label>Nombre</label>
+          <input type="text" name="name" value="{{ user.name }}" required />
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" name="email" value="{{ user.email }}" required />
+        </div>
+        <div class="form-field">
+          <label>Contrasena (dejar vacio para no cambiar)</label>
+          <input type="password" name="password" />
+        </div>
+        <div class="form-field">
+          <label>Rol</label>
+          <select name="role">
+            {% for role in GlobalRole %}
+              <option value="{{ role.value }}" {% if user.global_role == role %}selected{% endif %}>{{ role.value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn secondary" type="submit">Actualizar</button>
+          <button class="btn" type="submit" formaction="{{ url_for('users.delete_user', user_id=user.id) }}" formmethod="post" style="background:#ff6969;" onclick="return confirm('Eliminar usuario?');">Eliminar</button>
+        </div>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

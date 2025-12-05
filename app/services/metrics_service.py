@@ -8,6 +8,17 @@ class MetricsService:
         self.reading_repo = reading_repo or ReadingRepository()
         self.home_repo = home_repo or HomeRepository()
 
+    def get_home_and_readings(self, home_id: int | None = None, limit: int = 50):
+        home = None
+        if home_id:
+            home = self.home_repo.get_by_id(home_id)
+        if not home:
+            home = self.home_repo.get_first()
+        if not home:
+            return None, []
+        readings = self.reading_repo.latest_by_home(home.id, limit=limit)
+        return home, readings
+
     def summary(self):
         home = self.home_repo.get_first()
         if not home:

@@ -10,14 +10,14 @@
 </section>
 
 <section>
-  <div class="homes-grid">
-    {% for home in homes %}
-    <a class="home-card" href="{{ url_for('pages.home_dashboard', home_id=home.id) }}">
-      <div class="card">
-        <h3>{{ home.name }}</h3>
-        <p class="muted">{{ home.timezone }}{% if home.address %} - {{ home.address }}{% endif %}</p>
-        <p class="muted">{{ home.description or 'Casa configurada con ESP32' }}</p>
-      </div>
+    <div class="homes-grid">
+      {% for home in homes %}
+      <a class="home-card" href="{{ url_for('pages.dashboard', home_id=home.id) }}">
+        <div class="card">
+          <h3>{{ home.name }}</h3>
+          <p class="muted">{{ home.timezone }}{% if home.address %} - {{ home.address }}{% endif %}</p>
+          <p class="muted">{{ home.description or 'Casa configurada con ESP32' }}</p>
+        </div>
     </a>
     {% endfor %}
   </div>

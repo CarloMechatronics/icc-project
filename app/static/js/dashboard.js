@@ -1,4 +1,4 @@
-﻿const deviceId = "esp32-1";
+const deviceId = "esp32-1";
 
 // El dashboard habla siempre con el mismo origen (localhost/EC2) en rutas /api/*.
 // El backend Flask local se encarga de proxyar estas rutas al EC2 real.
@@ -23,6 +23,7 @@ function setText(id, text) {
 
 // ==== LECTURAS: /api/temp, /api/hum, /api/motion (proxy a EC2) ====
 async function loadTelemetry() {
+  if (!document.getElementById("temp-value")) return;
   try {
     const [tempData, humData, motionData] = await Promise.all([
       fetchJSON(`/api/temp?device=${deviceId}`),
@@ -54,6 +55,7 @@ async function loadTelemetry() {
 
 // ==== CONTROL: /api/control (proxy a EC2 /api/control) ====
 async function applyControl() {
+  if (!document.getElementById("apply-control")) return;
   const led1 = document.getElementById("led1-toggle").checked;
   const led2 = document.getElementById("led2-toggle").checked;
   const doorOpen = document.getElementById("door-toggle").checked;
@@ -78,17 +80,6 @@ async function applyControl() {
   }
 }
 
-async function loadMetrics() {
-  try {
-    // De momento mostramos el listado bruto que devuelve el backend remoto via /api (proxy local)
-    const data = await fetchJSON("/api?limit=20");
-    const pre = document.getElementById("metrics-json");
-    if (pre) pre.textContent = JSON.stringify(data, null, 2);
-  } catch (err) {
-    console.error("metrics", err);
-  }
-}
-
 function wireUI() {
   const btn = document.getElementById("apply-control");
   if (btn) btn.addEventListener("click", applyControl);
@@ -98,9 +89,10 @@ function wireUI() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  const dashboardRoot = document.getElementById("dashboard-root");
+  if (!dashboardRoot) return; // evitar ejecucion en paginas sin dashboard
+
   wireUI();
   loadTelemetry();
-  loadMetrics();
   setInterval(loadTelemetry, 4000);
-  setInterval(loadMetrics, 10000);
 });
